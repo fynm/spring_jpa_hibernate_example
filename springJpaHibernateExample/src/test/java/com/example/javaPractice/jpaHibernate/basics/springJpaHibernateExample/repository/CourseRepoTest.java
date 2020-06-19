@@ -3,8 +3,12 @@ package com.example.javaPractice.jpaHibernate.basics.springJpaHibernateExample.r
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
 import com.example.javaPractice.jpaHibernate.basics.springJpaHibernateExample.SpringJpaHibernateExampleApplication;
 import com.example.javaPractice.jpaHibernate.entity.Course;
+import com.example.javaPractice.jpaHibernate.entity.Review;
 import com.example.javaPractice.jpaHibernate.repository.CourseRepo;
 
 import org.junit.jupiter.api.Test;
@@ -22,6 +26,9 @@ public class CourseRepoTest {
     @Autowired
     CourseRepo repo;
 
+    @Autowired
+    EntityManager em;
+
     @Test
     public void findById_basic(){
         Course course = repo.findById(10001L);
@@ -35,6 +42,20 @@ public class CourseRepoTest {
     public void deleteById_basic(){
         repo.deleteById(10001L);
         assertNull(repo.findById(10001L));
+    }
+
+    @Test
+    @Transactional
+    public void retrieveReviewsForCourse(){
+        Course course = repo.findById(10001L);
+        logger.info("Course Reviews -> {}", course.getReviews());
+    }
+
+    @Test
+    @Transactional
+    public void retrieveCourseForReview(){
+       Review review = em.find(Review.class, 40001L);
+        logger.info("Course of Review -> {}", review.getCourse()); //Eager Fetched ..ToOne will always be Eagar, ..ToMany will always be Lazy unless specified
     }
 
     @Test

@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 //Note this is a hibernate function, this is now allowed if you choose to use JPA with another framework that is not hibernate
@@ -35,6 +37,9 @@ public class Passport {
 
     @CreationTimestamp //Note this is a hibernate function, this is now allowed if you choose to use JPA with another framework that is not hibernate
     private LocalDateTime createdDate;
+
+    @OneToOne(fetch=FetchType.LAZY, mappedBy = "passport") //set mappedBy so that student is the owning side of the relationship so multiple columns of the same data doesnt exist
+    private Student student;    //The mapped by is set to whatever variable is linked to the primary key of passport, in this case - private Passport passport; in Student
 
     //Default Constructor -> Needed by JPA
     public Passport(){}
@@ -64,6 +69,14 @@ public class Passport {
     public String toString() {
         return "Passport [createdDate=" + createdDate + ", id=" + id + ", lastUpdatedDate=" + lastUpdatedDate
                 + ", number=" + number + "]";
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     

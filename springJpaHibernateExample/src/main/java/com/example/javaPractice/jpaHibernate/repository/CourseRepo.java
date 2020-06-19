@@ -1,9 +1,14 @@
 package com.example.javaPractice.jpaHibernate.repository;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import com.example.javaPractice.jpaHibernate.entity.Course;
+import com.example.javaPractice.jpaHibernate.entity.Review;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class CourseRepo {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     EntityManager em;
@@ -34,6 +41,33 @@ public class CourseRepo {
     public void deleteById(Long id){
         Course course = findById(id);
         em.remove(course);
+    }
+
+    public void addReview(long courseId, List<Review> reviews){
+        Course course = findById(courseId);
+        for(Review review:reviews){
+            course.addReviews(review);  //add reivew to the course
+            review.setCourse(course);   //sets the course id in review
+            em.persist(review);         //add the new review to the DB
+        }
+    }
+
+    public void addReviewsForCourse(){
+        //get course 10003 - hardcoded for this example
+        Course course = findById(10003L);
+        logger.info("course.getReviews -> {}", course.getReviews());
+        //add two reviews to it
+        Review review = new Review("This sucks", 1);
+        course.addReviews(review);
+        review.setCourse(course); //need to set both relationships!
+        Review review2 = new Review("This really could have been better", 2);
+        course.addReviews(review2);
+        review2.setCourse(course);//need to set both relationships!
+        //save it to the database
+        em.persist(review);
+        em.persist(review2);
+        em.flush();
+        logger.info("course.getReviews -> {}", course.getReviews());
     }
 
     public void playWithEnitityManager(){

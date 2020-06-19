@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -41,12 +42,16 @@ public class Review {
     @CreationTimestamp //Note this is a hibernate function, this is now allowed if you choose to use JPA with another framework that is not hibernate
     private LocalDateTime createdDate;
 
+    @ManyToOne //There are many reviews to a single course
+    private Course course;
+
     //Default Constructor -> Needed by JPA
     public Review(){}
 
     //Constructor
-    public Review(String description){
+    public Review(String description, int rating){
         this.description = description;
+        this.rating = rating;
     }
 
     public String getDescription() {
@@ -71,6 +76,19 @@ public class Review {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    @Override
+    public String toString() {
+        return "Review [course=" + course + ", description=" + description + ", id=" + id + ", rating=" + rating + "]";
     }
 
     

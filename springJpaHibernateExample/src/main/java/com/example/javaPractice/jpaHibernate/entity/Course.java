@@ -1,13 +1,17 @@
 package com.example.javaPractice.jpaHibernate.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 //Note this is a hibernate function, this is now allowed if you choose to use JPA with another framework that is not hibernate
@@ -45,6 +49,14 @@ public class Course {
     @CreationTimestamp //Note this is a hibernate function, this is now allowed if you choose to use JPA with another framework that is not hibernate
     private LocalDateTime createdDate;
 
+    //MappedBy will go to the reviews as the review entity will hold the courseId as it doesnt make sense to hold reviewId if it can have multiple reviews
+    @OneToMany(mappedBy = "course") //point of view of this course and has many reviews so one course -> many reviews
+    private List<Review> reviews = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "courses")  //Student is the owning side of this relationship but we can swap it to course being the owning side if we want, doesnt matter
+    private List<Student> students = new ArrayList<>();
+
+
     //Default Constructor -> Needed by JPA
     public Course(){}
 
@@ -72,6 +84,31 @@ public class Course {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    //Instead of having a setReviews, we need to have a function to add a review/remove a review at a time
+    public void addReviews(Review review) {
+        this.reviews.add(review);
+    }
+
+    public void removeReviews(Review review){
+        this.reviews.remove(review);
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void addStudent(Student student) {
+        this.students.add(student);
+    }
+
+    public void removeStudent(Student student){
+        this.students.remove(student);
     }
 
 
