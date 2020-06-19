@@ -1,13 +1,17 @@
 package com.example.javaPractice.jpaHibernate.basics.springJpaHibernateExample;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.javaPractice.jpaHibernate.entity.Course;
+import com.example.javaPractice.jpaHibernate.entity.FullTimeEmployee;
+import com.example.javaPractice.jpaHibernate.entity.PartTimeEmployee;
 import com.example.javaPractice.jpaHibernate.entity.Review;
 import com.example.javaPractice.jpaHibernate.entity.Student;
 import com.example.javaPractice.jpaHibernate.repository.StudentRepo;
 import com.example.javaPractice.jpaHibernate.repository.CourseRepo;
+import com.example.javaPractice.jpaHibernate.repository.EmployeeRepo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +42,9 @@ public class SpringJpaHibernateExampleApplication implements CommandLineRunner{
 	@Autowired
 	private StudentRepo studentRepository;
 	
+	@Autowired
+	private EmployeeRepo EmployeeRepository;
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringJpaHibernateExampleApplication.class, args);
@@ -62,6 +69,15 @@ public class SpringJpaHibernateExampleApplication implements CommandLineRunner{
 		Student student = new Student("James");
 		Course course1 = new Course("Wow the best course");
 		studentRepository.insertStudentAndCourse(student, course1);
+
+		//------------------------------------------------------------
+
+		EmployeeRepository.insert(new PartTimeEmployee("Jack", new BigDecimal("50")));
+		EmployeeRepository.insert(new FullTimeEmployee("Coco", new BigDecimal("10000")));
+
+		//logger.info("All Employees -> {}", EmployeeRepository.retrieveAllEmployees());
+		logger.info("All PT Employees -> {}", EmployeeRepository.retrieveAllPartTimeEmployees());
+		logger.info("All FT Employees -> {}", EmployeeRepository.retrieveAllFullTimeEmployees());
 	}
 
 }
