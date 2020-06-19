@@ -11,7 +11,7 @@ insert into review(id, description, rating, created_date, last_updated_date, cou
 insert into passport(id, number, created_date, last_updated_date) values (30001, 'E1421365', sysdate(), sysdate());
 insert into passport(id, number, created_date, last_updated_date) values (30002, 'E6347145', sysdate(), sysdate());
 insert into passport(id, number, created_date, last_updated_date) values (30003, 'E3562346', sysdate(), sysdate());
-insert into passport(id, number, created_date, last_updated_date) values (30004, 'E2463724', sysdate(), sysdate());
+insert into passport(id, number, created_date, last_updated_date) values (30004, 'E1463724', sysdate(), sysdate());
 
 insert into student(id, name, created_date, last_updated_date, passport_id) values (20001, 'Shawn Fong', sysdate(), sysdate(), 30001);
 insert into student(id, name, created_date, last_updated_date, passport_id) values (20002, 'Monica Yan', sysdate(), sysdate(), 30002);
