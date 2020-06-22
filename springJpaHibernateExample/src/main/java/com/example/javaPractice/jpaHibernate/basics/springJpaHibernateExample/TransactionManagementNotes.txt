@@ -1,0 +1,48 @@
+Transaction Management
+
+If a transaction failed mid way you need to roll back the changes.
+Example
+Depositing Money from account A to account B
+
+Step 1 Deduct Money from a -> if it fails here you need to roll back else the money is lost from the system
+Step 2 Add Money to b
+
+ACID Properties
+A - Atomicity -> Transaction should be completely successful or all changes revert back from initial step
+C - Consistency -> Many transactions of the same logic need to be the same
+I - Isolation -> How changes within a transaction is visable to another transaction (abstraction)
+D - Durability -> Once a transaction is successful, if system crashes, the data should persist
+
+Dirty Read
+    Items running in parallel on the same entity -> if one of item parallel items failed you might revert the entity before the other item in parallel that did not failed
+        This is an example of a dirty read where the end result after the error the OG entity now has a different value than it should
+
+Non Repeatable Read
+    If you read a value then update the value then read again it results in a new value -> this is a non-repeatable read
+        Reading the same thing twice, it gives different values
+
+Phantom Reads
+    You look up a value with a range and after the read an item is inserted into that range, you read it again and there is one more item   
+        At different times you getting different number of values
+
+4 Different Isolation Levels
+Levels if you want to note it in the props file
+1           Read Uncommitted -> Allow any transaction to any other transaction -> Problems: Dirty Read / NonRepeatable Read / Phantom Read
+2           Read Committed -> Allows any transaction to read another transaction if that transaction is commited else there is a lock on it -> Problems NonRepeatable Read / Phantom Read
+4           Repeatable Read -> Lock modified values and values during the transaction -> Problems: Phantom Read
+8           Serialized Read -> Lock created for any row that matches a constraint so any item that is added to that constraint it will be locked-> table lock -> Problems: None
+
+Choosing between Isolation Levels
+Serializable will solve all problems but have very poor performance -> think if any of the problems are not problems for your application
+Each isolation level up to Read Uncommited will have better performance but you have to weight to see if the problems that might come up with it
+is something you have to account for in your application
+
+JavaX Transactional vs Spring Transactional (JPA)
+
+JavaX is good for a single table update but not for multiple tables
+Spring Transactional can manage multple updates accross multiple tables (entities)
+
+Spring transactional can define what isolation level you want (noted above)
+@Transactional(isolation=READ_COMMITED) ...Etc
+We can also set all transactions to have a certain isolation in the properties failed
+spring.jpa.properties.hibernate.connection.isolation=2 (READ_COMMITED) , 8 Serializable
